@@ -15,8 +15,18 @@
  * =============================================================================
  */
 
-import './squared_difference';
-import './broadcast_to';
-import './tile';
-import './one_hot';
-import './pad';
+import {pad} from '../../ops/pad';
+import {Tensor} from '../../tensor';
+import {Rank} from '../../types';
+
+declare module '../../tensor' {
+  interface Tensor<R extends Rank = Rank> {
+    pad<T extends Tensor>(
+        paddings: Array<[number, number]>, constantValue?: number): T;
+  }
+}
+
+Tensor.prototype.pad = function<T extends Tensor>(
+    this: T, paddings: Array<[number, number]>, constantValue: number): T {
+  return pad(this, paddings, constantValue);
+};
